@@ -1,0 +1,85 @@
+name: CI/CD — Deploy Portfolio
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+
+  # ── JOB 1: TEST & LINT ──────────────────────────────────────
+  test-and-lint:
+    name: Test & Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Validate HTML (check file exists)
+        run: |
+          echo "✅ Checking HTML file..."
+          test -f index.html && echo "index.html found!" || exit 1
+
+      - name: Validate CSS (check file exists)
+        run: |
+          echo "✅ Checking CSS file..."
+          test -f style.css && echo "style.css found!" || exit 1
+
+      - name: Validate JS (check file exists)
+        run: |
+          echo "✅ Checking JS file..."
+          test -f script.js && echo "script.js found!" || exit 1
+
+      - name: Check for TODO markers
+        run: |
+          echo "🔍 Checking for unresolved TODO comments..."
+          if grep -r "TODO:" --include="*.html" --include="*.css" --include="*.js" .; then
+            echo "⚠️  Found TODO comments — please resolve before merging"
+          else
+            echo "✅ No unresolved TODOs found"
+          fi
+
+      - name: Print file sizes
+        run: |
+          echo "📦 File sizes:"
+          ls -lh index.html style.css script.js
+
+      - name: All checks passed
+        run: echo "🎉 All CI checks passed!"
+
+  # ── JOB 2: DEPLOY TO GITHUB PAGES ──────────────────────────
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: test-and-lint          # Only deploy if tests pass
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup GitHub Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact to Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'          # Upload entire repo root (our HTML/CSS/JS files)
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Show deployment URL
+        run: |
+          echo "🚀 Deployed to: ${{ steps.deployment.outputs.page_url }}"
