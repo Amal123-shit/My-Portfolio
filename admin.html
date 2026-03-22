@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Panel | Amal Joseph Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #050a0e;
+      --bg2: #0a1520;
+      --panel: #0d1b2a;
+      --border: #1a3a5c;
+      --accent: #00d4ff;
+      --accent2: #00ff88;
+      --accent3: #ff4060;
+      --text: #c8dce8;
+      --text-dim: #4a7a9b;
+      --font-mono: 'Share Tech Mono', monospace;
+      --font-head: 'Orbitron', monospace;
+      --font-body: 'Rajdhani', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      min-height: 100vh;
+    }
+
+    /* ── LOGIN SCREEN ── */
+    #login-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(ellipse at center, #0a1a2e 0%, #050a0e 70%);
+    }
+
+    .login-box {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      padding: 48px 40px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 0 60px rgba(0,212,255,0.1);
+    }
+
+    .login-logo {
+      font-family: var(--font-head);
+      font-size: 1.4rem;
+      font-weight: 900;
+      color: var(--accent);
+      text-align: center;
+      margin-bottom: 8px;
+      letter-spacing: 4px;
+    }
+
+    .login-sub {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      text-align: center;
+      margin-bottom: 36px;
+      letter-spacing: 2px;
+    }
+
+    .login-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .login-group label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      letter-spacing: 2px;
+    }
+
+    .login-group input {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      padding: 12px 16px;
+      outline: none;
+      transition: all 0.3s;
+      width: 100%;
+    }
+
+    .login-group input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(0,212,255,0.1);
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--accent);
+      color: var(--bg);
+      border: none;
+      font-family: var(--font-head);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-top: 8px;
+    }
+
+    .login-btn:hover {
+      background: var(--accent2);
+    }
+
+    .login-error {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--accent3);
+      text-align: center;
+      margin-top: 16px;
+      min-height: 20px;
+    }
+
+    /* ── ADMIN DASHBOARD ── */
+    #admin-screen { display: none; }
+
+    .admin-nav {
+      background: var(--panel);
+      border-bottom: 1px solid var(--border);
+      padding: 0 40px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .admin-nav-logo {
+      font-family: var(--font-head);
+      font-size: 1rem;
+      font-weight: 900;
+      color: var(--accent);
+      letter-spacing: 3px;
+    }
+
+    .admin-nav-right {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .admin-user {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-dim);
+    }
+
+    .admin-user span { color: var(--accent2); }
+
+    .logout-btn {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      padding: 8px 16px;
+      background: transparent;
+      border: 1px solid var(--accent3);
+      color: var(--accent3);
+      cursor: pointer;
+      transition: all 0.3s;
+      letter-spacing: 1px;
+    }
+
+    .logout-btn:hover {
+      background: rgba(255,64,96,0.1);
+    }
+
+    .admin-body {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px;
+    }
+
+    .admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .admin-title {
+      font-family: var(--font-head);
+      font-size: 1.4rem;
+      font-weight: 700;
+      letter-spacing: 4px;
+      color: #fff;
+    }
+
+    .admin-title span { color: var(--accent); }
+
+    /* STATS */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 36px;
+    }
+
+    .stat-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      padding: 24px;
+      text-align: center;
+    }
+
+    .stat-card-num {
+      font-family: var(--font-head);
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: var(--accent);
+      display: block;
+    }
+
+    .stat-card-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      letter-spacing: 2px;
+      margin-top: 4px;
+    }
+
+    /* CONTROLS */
+    .controls {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+
+    .refresh-btn {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      padding: 10px 20px;
+      background: var(--accent);
+      color: var(--bg);
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s;
+      letter-spacing: 1px;
+      font-weight: 700;
+    }
+
+    .refresh-btn:hover { background: var(--accent2); }
+
+    .search-input {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      padding: 10px 16px;
+      outline: none;
+      transition: all 0.3s;
+      width: 260px;
+    }
+
+    .search-input:focus { border-color: var(--accent); }
+    .search-input::placeholder { color: var(--text-dim); }
+
+    /* MESSAGES TABLE */
+    .table-wrap {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead tr {
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 2px;
+      color: var(--accent);
+      padding: 14px 20px;
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid rgba(26,58,92,0.5);
+      transition: background 0.2s;
+    }
+
+    tbody tr:hover { background: rgba(0,212,255,0.03); }
+    tbody tr:last-child { border-bottom: none; }
+
+    td {
+      padding: 16px 20px;
+      font-size: 0.88rem;
+      color: var(--text-dim);
+      vertical-align: top;
+    }
+
+    td.name-cell {
+      font-family: var(--font-mono);
+      color: var(--text);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    td.email-cell {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--accent);
+    }
+
+    td.subject-cell {
+      color: var(--text);
+      max-width: 200px;
+    }
+
+    td.message-cell {
+      max-width: 300px;
+      font-size: 0.82rem;
+      line-height: 1.5;
+    }
+
+    td.date-cell {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      white-space: nowrap;
+    }
+
+    .id-badge {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      padding: 2px 8px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      color: var(--accent2);
+    }
+
+    /* EMPTY / LOADING */
+    .table-status {
+      text-align: center;
+      padding: 60px 20px;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--text-dim);
+    }
+
+    .loading-dot {
+      display: inline-block;
+      animation: blink 1s step-end infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); }
+    ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+  </style>
+</head>
+<body>
+
+  <!-- LOGIN SCREEN -->
+  <div id="login-screen">
+    <div class="login-box">
+      <div class="login-logo">[AJ] ADMIN</div>
+      <div class="login-sub">// SECURE ACCESS ONLY</div>
+      <div class="login-group">
+        <label>// USERNAME</label>
+        <input type="text" id="login-username" placeholder="Enter username" autocomplete="off" />
+      </div>
+      <div class="login-group">
+        <label>// PASSWORD</label>
+        <input type="password" id="login-password" placeholder="Enter password" />
+      </div>
+      <button class="login-btn" onclick="doLogin()">ACCESS PANEL</button>
+      <div class="login-error" id="login-error"></div>
+    </div>
+  </div>
+
+  <!-- ADMIN DASHBOARD -->
+  <div id="admin-screen">
+    <nav class="admin-nav">
+      <div class="admin-nav-logo">[AJ] ADMIN PANEL</div>
+      <div class="admin-nav-right">
+        <div class="admin-user">Logged in as <span>admin</span></div>
+        <button class="logout-btn" onclick="doLogout()">LOGOUT</button>
+      </div>
+    </nav>
+
+    <div class="admin-body">
+      <div class="admin-header">
+        <div class="admin-title">CONTACT <span>MESSAGES</span></div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card">
+          <span class="stat-card-num" id="stat-total">—</span>
+          <div class="stat-card-label">TOTAL MESSAGES</div>
+        </div>
+        <div class="stat-card">
+          <span class="stat-card-num" id="stat-today">—</span>
+          <div class="stat-card-label">RECEIVED TODAY</div>
+        </div>
+        <div class="stat-card">
+          <span class="stat-card-num" id="stat-latest">—</span>
+          <div class="stat-card-label">LATEST FROM</div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="refresh-btn" onclick="loadMessages()">↻ REFRESH</button>
+        <input class="search-input" type="text" id="search-input" placeholder="Search messages..." oninput="filterMessages()" />
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#ID</th>
+              <th>NAME</th>
+              <th>EMAIL</th>
+              <th>SUBJECT</th>
+              <th>MESSAGE</th>
+              <th>DATE & TIME</th>
+            </tr>
+          </thead>
+          <tbody id="messages-tbody">
+            <tr>
+              <td colspan="6" class="table-status">
+                <span class="loading-dot">█</span> Loading messages...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ── CONFIG ────────────────────────────────────────────────
+    const BACKEND = 'https://portfolio-backend-wxwu.onrender.com';
+    const ADMIN_KEY = 'amal2025secret';
+    const CREDENTIALS = { username: 'admin', password: 'adminamal' };
+
+    let allMessages = [];
+
+    // ── LOGIN ─────────────────────────────────────────────────
+    function doLogin() {
+      const u = document.getElementById('login-username').value.trim();
+      const p = document.getElementById('login-password').value.trim();
+      const err = document.getElementById('login-error');
+
+      if (u === CREDENTIALS.username && p === CREDENTIALS.password) {
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('admin-screen').style.display = 'block';
+        loadMessages();
+      } else {
+        err.textContent = '// ERROR: Invalid username or password.';
+        document.getElementById('login-password').value = '';
+      }
+    }
+
+    // Allow Enter key to login
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && document.getElementById('login-screen').style.display !== 'none') {
+        doLogin();
+      }
+    });
+
+    // ── LOGOUT ────────────────────────────────────────────────
+    function doLogout() {
+      document.getElementById('admin-screen').style.display = 'none';
+      document.getElementById('login-screen').style.display = 'flex';
+      document.getElementById('login-username').value = '';
+      document.getElementById('login-password').value = '';
+      document.getElementById('login-error').textContent = '';
+      allMessages = [];
+    }
+
+    // ── LOAD MESSAGES ─────────────────────────────────────────
+    async function loadMessages() {
+      const tbody = document.getElementById('messages-tbody');
+      tbody.innerHTML = '<tr><td colspan="6" class="table-status"><span class="loading-dot">█</span> Fetching messages...</td></tr>';
+
+      try {
+        const res = await fetch(`${BACKEND}/api/messages?key=${ADMIN_KEY}`);
+        const data = await res.json();
+
+        if (!res.ok) throw new Error(data.error || 'Failed to fetch');
+
+        allMessages = data.messages || [];
+        updateStats(allMessages);
+        renderMessages(allMessages);
+
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="6" class="table-status" style="color:var(--accent3)">// ERROR: ${err.message}</td></tr>`;
+      }
+    }
+
+    // ── RENDER MESSAGES ───────────────────────────────────────
+    function renderMessages(messages) {
+      const tbody = document.getElementById('messages-tbody');
+
+      if (messages.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="table-status">// No messages found.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = messages.map(m => `
+        <tr>
+          <td><span class="id-badge">#${m.id}</span></td>
+          <td class="name-cell">${escapeHtml(m.name)}</td>
+          <td class="email-cell">${escapeHtml(m.email)}</td>
+          <td class="subject-cell">${escapeHtml(m.subject)}</td>
+          <td class="message-cell">${escapeHtml(m.message)}</td>
+          <td class="date-cell">${formatDate(m.created_at)}</td>
+        </tr>
+      `).join('');
+    }
+
+    // ── FILTER / SEARCH ───────────────────────────────────────
+    function filterMessages() {
+      const q = document.getElementById('search-input').value.toLowerCase();
+      if (!q) {
+        renderMessages(allMessages);
+        return;
+      }
+      const filtered = allMessages.filter(m =>
+        m.name.toLowerCase().includes(q) ||
+        m.email.toLowerCase().includes(q) ||
+        m.subject.toLowerCase().includes(q) ||
+        m.message.toLowerCase().includes(q)
+      );
+      renderMessages(filtered);
+    }
+
+    // ── STATS ─────────────────────────────────────────────────
+    function updateStats(messages) {
+      document.getElementById('stat-total').textContent = messages.length;
+
+      const today = new Date().toDateString();
+      const todayCount = messages.filter(m =>
+        new Date(m.created_at).toDateString() === today
+      ).length;
+      document.getElementById('stat-today').textContent = todayCount;
+
+      if (messages.length > 0) {
+        document.getElementById('stat-latest').textContent = messages[0].name.split(' ')[0];
+      } else {
+        document.getElementById('stat-latest').textContent = 'N/A';
+      }
+    }
+
+    // ── HELPERS ───────────────────────────────────────────────
+    function formatDate(dateStr) {
+      const d = new Date(dateStr);
+      return d.toLocaleDateString('en-IN', {
+        day: '2-digit', month: 'short', year: 'numeric'
+      }) + ' ' + d.toLocaleTimeString('en-IN', {
+        hour: '2-digit', minute: '2-digit'
+      });
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+  </script>
+</body>
+</html>
