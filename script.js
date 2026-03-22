@@ -11,7 +11,7 @@
 
   function resize() {
     canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    canvas.height = window.innerHeight;const BACKEND_URL = 
     const cols = Math.floor(canvas.width / 18);
     drops = Array.from({ length: cols }, () => Math.random() * -canvas.height);
   }
