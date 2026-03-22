@@ -1,8 +1,3 @@
-/* ============================================================
-   AMAL JOSEPH — PORTFOLIO SCRIPTS
-   Matrix Rain, Typed Text, Scroll Animations, Contact Form
-   ============================================================ */
-
 // ── MATRIX RAIN ──────────────────────────────────────────────
 (function () {
   const canvas = document.getElementById('matrix-canvas');
@@ -11,12 +6,12 @@
 
   function resize() {
     canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;const BACKEND_URL = 
+    canvas.height = window.innerHeight;
     const cols = Math.floor(canvas.width / 18);
     drops = Array.from({ length: cols }, () => Math.random() * -canvas.height);
   }
 
-  const chars = 'アカサタナハマヤラワ0123456789ABCDEF<>/{}[]()!@#$%^&*;:';
+  const chars = '0123456789ABCDEF<>/{}[]()!@#$%^&*;:';
 
   function draw() {
     ctx.fillStyle = 'rgba(5,10,14,0.04)';
@@ -130,8 +125,6 @@
   const status = document.getElementById('form-status');
   const btnText = document.getElementById('btn-text');
 
-  // !! IMPORTANT: Replace this URL with your Render.com backend URL after deployment
-  // Example: 'https://your-backend.onrender.com/api/contact'
   const BACKEND_URL = 'https://portfolio-backend-wxwu.onrender.com/api/contact';
 
   form.addEventListener('submit', async (e) => {
@@ -166,11 +159,10 @@
         showStatus(`// ERROR: ${data.error || 'Transmission failed.'}`, 'error');
       }
     } catch (err) {
-      // If backend is not yet deployed, show a friendly message
       showStatus('// Backend not connected yet. Set up your server first!', 'error');
       console.error(err);
     } finally {
-      btnText.textContent = 'SEND MESSAGE ↗';
+      btnText.textContent = 'SEND MESSAGE';
     }
   });
 
