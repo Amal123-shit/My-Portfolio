@@ -132,7 +132,7 @@
 
   // !! IMPORTANT: Replace this URL with your Render.com backend URL after deployment
   // Example: 'https://your-backend.onrender.com/api/contact'
-  const BACKEND_URL = 'https://YOUR-BACKEND.onrender.com/api/contact';
+  const BACKEND_URL = 'https://portfolio-backend-wxwu.onrender.com/api/contact';
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
